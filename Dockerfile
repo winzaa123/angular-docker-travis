@@ -14,8 +14,8 @@ RUN mkdir -p /srv && chown -R node:node /srv
 USER node
 WORKDIR /srv
 
-# ENV PATH=${PATH}:./node_modules/.bin
-# ENV NODE_PATH=/srv/node_modules
+ENV PATH=${PATH}:./node_modules/.bin
+ENV NODE_PATH=/srv/node_modules
 
 COPY package.json .
 COPY package-lock.json* .
@@ -30,10 +30,10 @@ RUN npm ci
 # RUN ./node_modules/.bin/ngcc --properties es2015  --create-ivy-entry-points
 # RUN ./node_modules/.bin/ngcc --properties es2015
 COPY . .
-RUN ["npm","run","build"]
+RUN ng build --output-path=./dist/out
 
 
 FROM nginx:1.17-alpine
 ADD ./production-config.conf  /etc/nginx/nginx.conf
-COPY --from=builder /srv/dist/ng-application /usr/share/nginx/html
+COPY --from=builder /srv/dist/out /usr/share/nginx/html
 # CMD ["nginx","-g","daemon off"]
