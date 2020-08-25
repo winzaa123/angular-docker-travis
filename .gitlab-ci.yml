@@ -12,8 +12,8 @@ variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
 
-  UAT_SSH: "ssh ubuntu@13.250.111.1"
-  UAT_HOST: "ubuntu@13.250.111.1"
+  UAT_SSH: "ssh ubuntu@xxx"
+  UAT_HOST: "ubuntu@xxx"
 
   PROD_SSH: "ssh ubuntu@xxx"
   PROD_HOST: "ubuntu@xxx"
