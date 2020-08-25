@@ -1,0 +1,70 @@
+services:
+  - docker:19.03.12-dind
+
+stages:
+  - build
+  - deploy
+  - release
+  - notification
+
+variables:
+  DOCKER_HOST: tcp://localhost:2375
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+
+  UAT_SSH: "ssh ubuntu@13.250.111.1"
+  UAT_HOST: "ubuntu@13.250.111.1"
+
+  PROD_SSH: "ssh ubuntu@xxx"
+  PROD_HOST: "ubuntu@xxx"
+
+image: docker:19.03.12
+
+test_build:
+  stage: build
+  only:
+    - devops
+  script:
+    - apk update
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - "which ssh-agent || ( apk update && apk add --no-cache openssh-client)"
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - DOCKER_BUILDKIT=1 docker build --cache-from $CI_REGISTRY_IMAGE:latest --build-arg BUILDKIT_INLINE_CACHE=1  --tag $CI_REGISTRY_IMAGE:latest  .
+    - docker push $CI_REGISTRY_IMAGE:latest
+
+build:
+  stage: build
+  only:
+    - dev
+    - master
+  script:
+    - apk update
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - "which ssh-agent || ( apk update && apk add --no-cache openssh-client)"
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    # - docker build  --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA --tag $CI_REGISTRY_IMAGE:latest -f Dockerfile.uat .
+    - DOCKER_BUILDKIT=1 docker build --cache-from $CI_REGISTRY_IMAGE:latest --build-arg BUILDKIT_INLINE_CACHE=1  --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA --tag $CI_REGISTRY_IMAGE:latest  .
+    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+
+
+# success_notification:
+#   image: bash:latest
+#   stage: notification
+#   except:
+#     - devops
+#   script:
+#     - apk add git curl
+#     - wget https://raw.githubusercontent.com/DiscordHooks/gitlab-ci-discord-webhook/master/send.sh
+#     - sh send.sh success https://discordapp.com/api/webhooks/669131119761031179/Qsc2nRj68NyqrM0_TnvqKXDME8PpOcT_lx3UiDXCUtSq36NILo9f7ItU7y4iIGrHVtk8
+#   when: on_success
+# failure_notification:
+#   image: bash:latest
+#   stage: notification
+#   except:
+#     - devops
+#   script:
+#     - apk add git curl
+#     - wget https://raw.githubusercontent.com/DiscordHooks/gitlab-ci-discord-webhook/master/send.sh
+#     - sh send.sh failure https://discordapp.com/api/webhooks/669131119761031179/Qsc2nRj68NyqrM0_TnvqKXDME8PpOcT_lx3UiDXCUtSq36NILo9f7ItU7y4iIGrHVtk8
+#   when: on_failure
