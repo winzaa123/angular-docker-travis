@@ -35,5 +35,5 @@ RUN ["npm","run","build"]
 
 FROM nginx:1.17-alpine
 ADD ./production-config.conf  /etc/nginx/nginx.conf
-COPY --from=builder /srv/dist/front-end /usr/share/nginx/html
+COPY --from=builder /srv/dist/ng-application /usr/share/nginx/html
 # CMD ["nginx","-g","daemon off"]
