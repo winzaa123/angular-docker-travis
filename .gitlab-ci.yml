@@ -32,20 +32,31 @@ test_build:
     - DOCKER_BUILDKIT=1 docker build --cache-from $CI_REGISTRY_IMAGE:latest --build-arg BUILDKIT_INLINE_CACHE=1  --tag $CI_REGISTRY_IMAGE:latest  .
     - docker push $CI_REGISTRY_IMAGE:latest
 
-build:
+# Build #
+angular-build:
   stage: build
-  only:
-    - dev
-    - master
+  image: node:14.8.0-alpine
+  cache:
+      paths:
+        - node_modules/
   script:
-    - apk update
-    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-    - "which ssh-agent || ( apk update && apk add --no-cache openssh-client)"
-    - docker pull $CI_REGISTRY_IMAGE:latest || true
-    # - docker build  --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA --tag $CI_REGISTRY_IMAGE:latest -f Dockerfile.uat .
-    - DOCKER_BUILDKIT=1 docker build --cache-from $CI_REGISTRY_IMAGE:latest --build-arg BUILDKIT_INLINE_CACHE=1  --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA --tag $CI_REGISTRY_IMAGE:latest  .
-    - docker push $CI_REGISTRY_IMAGE:latest
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    - npm ci
+    - ng build --output-path=./dist/out
+
+# build:
+#   stage: build
+#   only:
+#     - dev
+#     - master
+#   script:
+#     - apk update
+#     - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+#     - "which ssh-agent || ( apk update && apk add --no-cache openssh-client)"
+#     - docker pull $CI_REGISTRY_IMAGE:latest || true
+#     # - docker build  --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA --tag $CI_REGISTRY_IMAGE:latest -f Dockerfile.uat .
+#     - DOCKER_BUILDKIT=1 docker build --cache-from $CI_REGISTRY_IMAGE:latest --build-arg BUILDKIT_INLINE_CACHE=1  --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA --tag $CI_REGISTRY_IMAGE:latest  .
+#     - docker push $CI_REGISTRY_IMAGE:latest
+#     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
 
 
 # success_notification:
