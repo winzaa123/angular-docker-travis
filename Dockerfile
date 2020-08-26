@@ -17,7 +17,7 @@ WORKDIR /srv
 ENV PATH=${PATH}:./node_modules/.bin
 ENV NODE_PATH=/srv/node_modules
 
-COPY package*.json ./
+ADD  package.json package-lock.json*  ./
 
 # COPY local-lib local-lib
 
