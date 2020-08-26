@@ -32,7 +32,6 @@ test_build:
     - DOCKER_BUILDKIT=1 docker build --cache-from $CI_REGISTRY_IMAGE:latest --build-arg BUILDKIT_INLINE_CACHE=1  --tag $CI_REGISTRY_IMAGE:latest  .
     - docker push $CI_REGISTRY_IMAGE:latest
 
-# Build #
 # angular-build:
 #   stage: build
 #   image: node:14.8.0-alpine
