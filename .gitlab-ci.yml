@@ -41,7 +41,7 @@ angular-build:
         - node_modules/
   script:
     - npm ci
-    - ng build --output-path=./dist/out
+    - npm run build --output-path=./dist/out
 
 # build:
 #   stage: build
