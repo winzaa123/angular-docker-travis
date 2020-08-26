@@ -22,8 +22,8 @@ image: docker:19.03.12
 
 test_build:
   stage: build
-  only:
-    - devops
+  # only:
+  #   - devops
   script:
     - apk update
     - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
