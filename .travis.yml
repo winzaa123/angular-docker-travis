@@ -1,0 +1,39 @@
+sudo: required
+
+services:
+  - docker
+env:
+  - DOCKER_COMPOSE_VERSION=1.26.1
+  - IMAGE_NAME=win-test/angular
+  
+language: node_js
+
+
+before_cache:
+  # Save tagged docker images
+  - >
+    mkdir -p $HOME/docker && docker images -a --filter='dangling=false' --format '{{.Repository}}:{{.Tag}} {{.ID}}'
+    | xargs -n 2 -t sh -c 'test -e $HOME/docker/$1.tar.gz || docker save $0 | gzip -2 > $HOME/docker/$1.tar.gz'
+    
+cache:
+  bundler: true
+  directories:
+    - $HOME/docker
+    - $HOME/.npm
+  
+# addons:
+#   apt:
+#     packages:
+#       - docker-ce
+
+before_script:
+  - docker -v
+
+
+script: 
+  - git_sha="$(git rev-parse --short HEAD)"
+  - DOCKER_BUILDKIT=1 docker build --cache-from $IMAGE_NAME:latest --build-arg BUILDKIT_INLINE_CACHE=1  --tag $IMAGE_NAME:latest  .
+
+after_script:
+  - docker-compose   down
+  - docker-compose -f ./sql/docker-compose.yml down
