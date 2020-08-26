@@ -33,21 +33,21 @@ test_build:
     - docker push $CI_REGISTRY_IMAGE:latest
 
 # Build #
-angular-build:
-  stage: build
-  image: node:14.8.0-alpine
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - node_modules/
-  script:
-    - npm ci
-    - npm run build -- --output-path=./dist/out
-  artifacts:
-    name: "Compiled-dist-${CI_COMMIT_SHORT_SHA}"
-    expire_in: 1 week
-    paths:
-    - dist/
+# angular-build:
+#   stage: build
+#   image: node:14.8.0-alpine
+#   cache:
+#     key: ${CI_COMMIT_REF_SLUG}
+#     paths:
+#       - node_modules/
+#   script:
+#     - npm ci
+#     - npm run build -- --output-path=./dist/out
+#   artifacts:
+#     name: "Compiled-dist-${CI_COMMIT_SHORT_SHA}"
+#     expire_in: 1 week
+#     paths:
+#     - dist/
 
 
 # build:
