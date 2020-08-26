@@ -42,9 +42,9 @@ angular-build:
       - node_modules/
   script:
     - npm ci
-    - npm run build --output-path=./dist/out
+    - npm run build -- --output-path=./dist/out
   artifacts:
-    name: "Compiled dist"
+    name: "Compiled-dist-${CI_COMMIT_SHORT_SHA}"
     expire_in: 1 week
     paths:
     - dist/
