@@ -37,11 +37,18 @@ angular-build:
   stage: build
   image: node:14.8.0-alpine
   cache:
-      paths:
-        - node_modules/
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
   script:
     - npm ci
     - npm run build --output-path=./dist/out
+  artifacts:
+    name: "Compiled dist"
+    expire_in: 1 week
+    paths:
+    - dist/
+
 
 # build:
 #   stage: build
