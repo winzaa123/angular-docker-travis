@@ -11,7 +11,10 @@
 FROM node:14.8.0-alpine as  builder 
 WORKDIR /srv
 
-COPY package.json package-lock.json*  ./
+COPY package.json package-lock.json*  /tmp/
+RUN cd /tmp && npm ci
+
+RUN cp -a /tmp/node_modules .
 
 RUN mkdir -p /srv && chown -R node:node /srv
 USER node
@@ -22,7 +25,7 @@ ENV NODE_PATH=/srv/node_modules
 
 # COPY local-lib local-lib
 
-RUN npm ci
+# RUN npm ci
 # RUN ngcc
 # COPY --from=install /app/ /srv/
 # https://medium.com/@nicolas.tresegnie/angular-docker-speed-up-your-builds-with-ngcc-b4f5b0987f46
