@@ -17,12 +17,11 @@ WORKDIR /srv
 ENV PATH=${PATH}:./node_modules/.bin
 ENV NODE_PATH=/srv/node_modules
 
-COPY package.json .
-COPY package-lock.json* .
+COPY package.json package-lock.json*  ./
 
 # COPY local-lib local-lib
 
-RUN npm ci
+RUN  yarn install --frozen-lockfile
 # RUN ngcc
 # COPY --from=install /app/ /srv/
 # https://medium.com/@nicolas.tresegnie/angular-docker-speed-up-your-builds-with-ngcc-b4f5b0987f46
