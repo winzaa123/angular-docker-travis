@@ -31,4 +31,4 @@ before_script:
 
 script: 
   - git_sha="$(git rev-parse --short HEAD)"
-  - DOCKER_BUILDKIT=1 docker build --cache-from $IMAGE_NAME:latest --build-arg BUILDKIT_INLINE_CACHE=1  -t $IMAGE_NAME:latest  .
+  - docker build --cache-from $IMAGE_NAME:latest --build-arg BUILDKIT_INLINE_CACHE=1  -t $IMAGE_NAME:latest  .
