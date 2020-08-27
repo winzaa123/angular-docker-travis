@@ -3,7 +3,8 @@ sudo: required
 services:
   - docker
 env:
-  - IMAGE_NAME=win-test/angular
+  global:
+    - IMAGE_NAME=win-test-angular
   
 language: bash
 
@@ -31,6 +32,18 @@ before_script:
   - docker -v
   - docker pull $IMAGE_NAME:latest || true
 
+after_script:
+  - docker images
+
 script: 
   - git_sha="$(git rev-parse --short HEAD)"
   - docker build --cache-from $IMAGE_NAME:latest --build-arg BUILDKIT_INLINE_CACHE=1  -t $IMAGE_NAME:latest  .
+
+
+# before_deploy:
+#   - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+# deploy:
+#   provider: script
+#   script: docker push $IMAGE_NAME:latest
+#   on:
+#     branch: master
