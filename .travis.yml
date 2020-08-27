@@ -5,8 +5,6 @@ services:
 env:
   global:
     - IMAGE_NAME=win-test-angular
-    - DOCKER_USERNAME=winzaa123 
-    - DOCKER_PASSWORD=${{ secrets.DOCKER_HUB_KEY }}
   
 language: bash
 
