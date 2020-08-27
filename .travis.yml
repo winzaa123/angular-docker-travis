@@ -5,6 +5,8 @@ services:
 env:
   global:
     - IMAGE_NAME=win-test-angular
+    - DOCKER_USERNAME=winzaa123 
+    - DOCKER_PASSWORD=${{ secrets.DOCKER_HUB_KEY }}
   
 language: bash
 
@@ -30,6 +32,8 @@ cache:
 
 before_script:
   - docker -v
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker images
   - docker pull $IMAGE_NAME:latest || true
 
 after_script:
@@ -38,6 +42,7 @@ after_script:
 script: 
   - git_sha="$(git rev-parse --short HEAD)"
   - docker build --cache-from $IMAGE_NAME:latest --build-arg BUILDKIT_INLINE_CACHE=1  -t $IMAGE_NAME:latest  .
+  - docker push $IMAGE_NAME:latest
 
 
 # before_deploy:
