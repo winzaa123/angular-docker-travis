@@ -5,7 +5,6 @@ services:
 env:
   global:
     - IMAGE_NAME=win-test-angular
-    - DOCKER_IMAGE_NAME=winzaa123/win-test-angular
   
 language: bash
 
@@ -42,7 +41,7 @@ after_script:
 script: 
   - git_sha="$(git rev-parse --short HEAD)"
   - docker build --cache-from $IMAGE_NAME:latest --build-arg BUILDKIT_INLINE_CACHE=1  -t $IMAGE_NAME:latest  .
-  - docker push ${DOCKER_IMAGE_NAME}:latest
+  - docker push ${DOCKER_USERNAME}/${IMAGE_NAME}:latest
 # deploy:
 #   provider: heroku
 #   api_key:
