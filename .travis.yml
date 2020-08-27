@@ -41,14 +41,13 @@ script:
   - git_sha="$(git rev-parse --short HEAD)"
   - docker build --cache-from $IMAGE_NAME:latest --build-arg BUILDKIT_INLINE_CACHE=1  -t $IMAGE_NAME:latest  .
 
-before_deploy:
-  - heroku auth:token
 deploy:
   provider: heroku
   api_key:
     secure: $HEROKU_API_KEY
   app: herokuwin
   run:
+    - heroku auth:token
     - heroku container:login
 # before_deploy:
 #   - docker login -u "$DOCKER_USERNAME" --password-stdin
