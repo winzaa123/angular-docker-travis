@@ -6,7 +6,7 @@ env:
   - DOCKER_COMPOSE_VERSION=1.26.1
   - IMAGE_NAME=win-test/angular
   
-language: node_js
+language: bash
 
 
 before_cache:
@@ -33,7 +33,3 @@ before_script:
 script: 
   - git_sha="$(git rev-parse --short HEAD)"
   - DOCKER_BUILDKIT=1 docker build --cache-from $IMAGE_NAME:latest --build-arg BUILDKIT_INLINE_CACHE=1  --tag $IMAGE_NAME:latest  .
-
-after_script:
-  - docker-compose   down
-  - docker-compose -f ./sql/docker-compose.yml down
