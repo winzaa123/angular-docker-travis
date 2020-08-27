@@ -40,7 +40,7 @@ after_script:
 
 script: 
   - git_sha="$(git rev-parse --short HEAD)"
-  - docker build --cache-from $IMAGE_NAME:latest  --tag ${IMAGE_NAME}:latest  .
+  - docker build --cache-from $IMAGE_NAME:latest  --tag ${IMAGE_NAME}:latest -t ${DOCKER_USERNAME}/${IMAGE_NAME}:latest  .
   - docker push ${DOCKER_USERNAME}/${IMAGE_NAME}:latest
 # deploy:
 #   provider: heroku
