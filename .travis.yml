@@ -40,13 +40,12 @@ after_script:
 script: 
   - git_sha="$(git rev-parse --short HEAD)"
   - docker build --cache-from $IMAGE_NAME:latest --build-arg BUILDKIT_INLINE_CACHE=1  -t $IMAGE_NAME:latest  .
-  - docker push $IMAGE_NAME:latest
 
 
-# before_deploy:
-#   - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
-# deploy:
-#   provider: script
-#   script: docker push $IMAGE_NAME:latest
-#   on:
-#     branch: master
+before_deploy:
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+deploy:
+  provider: script
+  script: docker push $IMAGE_NAME:latest
+  on:
+    branch: master
