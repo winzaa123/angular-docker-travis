@@ -29,7 +29,7 @@ cache:
 
 before_script:
   - docker -v
-
+  - docker pull $IMAGE_NAME:latest || true
 
 script: 
   - git_sha="$(git rev-parse --short HEAD)"

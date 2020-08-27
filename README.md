@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/winzaa123/angular-docker-travis.svg?branch=master)](https://travis-ci.com/winzaa123/angular-docker-travis)
+
 # NgApplication
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.29.
